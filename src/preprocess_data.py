@@ -2,6 +2,10 @@ import html
 import pandas as pd
 import numpy as np
 
+import nltk
+from nltk.corpus import stopwords
+stop_words = stopwords.words('english')
+
 
 def preprocess_text(text):
     text = text.astype(str).str.replace(
@@ -15,6 +19,10 @@ def preprocess_text(text):
     text = text.apply(html.unescape)  # remove html
     return text
 
+def remove_stopwords(text):
+    # remove stopwords
+    text = ' '.join([word for word in text.split() if word.lower() not in stop_words])
+    return text
 
 def process_date(date):
     date = date.astype(str).str.split()
@@ -39,8 +47,8 @@ df["Polarity"] = sentiments
 
 
 # preprocess the input data 
-df['Processed_Tweets'] = preprocess_text(twts)
-df.drop(columns=["Tweet"], inplace=True) 
+df['Processed_Tweets'] = preprocess_text(twts).apply(remove_stopwords)
+df.drop(columns=["Tweet"], inplace=True) # remove the original tweet column
 
 # split the date column and remove unnecessary columns
 dates = df["Date"]
