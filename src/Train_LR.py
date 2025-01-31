@@ -1,5 +1,5 @@
 import pandas as pd
-import pickle
+import joblib
 
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -15,17 +15,17 @@ stop_words = stopwords.words('english')
 
 def logistic_regression(X, Y):
     X_train, X_test, Y_train, Y_test = train_test_split(
-    X, Y, test_size=0.1, random_state=42)
+        X, Y, test_size=0.1, random_state=42)
 
-    pipeline = make_pipeline(TfidfVectorizer(), LogisticRegression(max_iter=1000))
+    pipeline = make_pipeline(
+        TfidfVectorizer(), LogisticRegression(max_iter=1000))
 
     pipeline.fit(X_train, Y_train)
-    
+
     training_accuracy = accuracy_score(Y_train, pipeline.predict(X_train))
     test_accuracy = accuracy_score(Y_test, pipeline.predict(X_test))
-    
-    return confusion_matrix(Y_test, pipeline.predict(X_test)), training_accuracy, test_accuracy, pipeline
 
+    return confusion_matrix(Y_test, pipeline.predict(X_test)), training_accuracy, test_accuracy, pipeline
 
 
 df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
@@ -34,7 +34,8 @@ df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 tweets = df['Processed_Tweets'].values
 polarity = df['Polarity'].values
 
-con_mat, training_accuracy, test_accuracy, model = logistic_regression(tweets, polarity)
+con_mat, training_accuracy, test_accuracy, model = logistic_regression(
+    tweets, polarity)
 false_neg = con_mat[1][0]
 false_pos = con_mat[0][1]
 true_neg = con_mat[0][0]
@@ -54,7 +55,4 @@ print('Test accuracy: ', round(test_accuracy*100, 2), "%")
 
 """Download the model"""
 filename = 'data/logistic_regression_model.sav'
-pickle.dump(model, open(filename, 'wb'))
-
-
-
+joblib.dump(model, open(filename, 'wb'))
