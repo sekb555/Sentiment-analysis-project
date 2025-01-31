@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 import re
+import pickle
+
+import preprocess_data as ppd
 
 import matplotlib.pyplot as plt
 
@@ -16,8 +19,22 @@ import nltk
 from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
-df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
-df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
+lr_model = pickle.load(open('data/logistic_regression_model.sav', 'rb'))
+
+while True:
+    text = input("Enter a tweet: ")
+    if text == "exit" or text == '':
+        break
+    text = ppd.preprocess_data.preprocess_text(text)
+    text = ppd.preprocess_data.remove_stopwords(text)
+    print(text)
+    prediction = lr_model.predict([text])
+    print(prediction)
+
+    if prediction == 0:
+        print("Negative sentiment")
+    else:
+        print("Positive sentiment")
 
 
 

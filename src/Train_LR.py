@@ -1,16 +1,12 @@
 import pandas as pd
-import numpy as np
-from collections import Counter
-import re
+import pickle
 
-import matplotlib.pyplot as plt
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import accuracy_score, confusion_matrix
 
 import nltk
 from nltk.corpus import stopwords
@@ -25,10 +21,10 @@ def logistic_regression(X, Y):
 
     pipeline.fit(X_train, Y_train)
     
+    training_accuracy = accuracy_score(Y_train, pipeline.predict(X_train))
+    test_accuracy = accuracy_score(Y_test, pipeline.predict(X_test))
     
-    training_accuracy = pipeline.score(X_train, Y_train)
-    test_accuracy = pipeline.score(X_test, Y_test)
-    return confusion_matrix(Y_test, pipeline.predict(X_test)), training_accuracy, test_accuracy
+    return confusion_matrix(Y_test, pipeline.predict(X_test)), training_accuracy, test_accuracy, pipeline
 
 
 
@@ -38,24 +34,27 @@ df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 tweets = df['Processed_Tweets'].values
 polarity = df['Polarity'].values
 
-con_mat, training_accuracy, test_accuracy = logistic_regression(tweets, polarity)
+con_mat, training_accuracy, test_accuracy, model = logistic_regression(tweets, polarity)
 false_neg = con_mat[1][0]
 false_pos = con_mat[0][1]
 true_neg = con_mat[0][0]
 true_pos = con_mat[1][1]
 
 """Evaluation Metrics"""
-# precision = true_pos/(true_pos+false_pos)
-# recall = true_pos/(true_pos+false_neg)
-# F1 = 2*(precision*recall)/(precision+recall)
-# print("Precision:", round(precision*100, 2), "%")
-# print("Recall:", round(recall*100, 2), "%")
-# print("F1 Score:", round(F1*100, 2), "%")
+precision = true_pos/(true_pos+false_pos)
+recall = true_pos/(true_pos+false_neg)
+F1 = 2*(precision*recall)/(precision+recall)
+print("Precision:", round(precision*100, 2), "%")
+print("Recall:", round(recall*100, 2), "%")
+print("F1 Score:", round(F1*100, 2), "%")
 
-# print('Training accuracy: ', round(training_accuracy*100, 2), "%")
-# print('Test accuracy: ', round(test_accuracy*100, 2), "%")
+print('Training accuracy: ', round(training_accuracy*100, 2), "%")
+print('Test accuracy: ', round(test_accuracy*100, 2), "%")
 
 
+"""Download the model"""
+filename = 'data/logistic_regression_model.sav'
+pickle.dump(model, open(filename, 'wb'))
 
 
 
