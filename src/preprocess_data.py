@@ -37,6 +37,8 @@ df = pd.read_csv(
     "data/training.1600000.processed.noemoticon.csv", header=None, encoding="ISO-8859-1")
 df.columns = ["Polarity", "ID", "Date", "Flag", "User", "Tweet"]
 
+df = df.dropna(subset=["Tweet"])  # remove rows with missing tweets
+
 df.drop(columns=["ID", "Flag", "User"], inplace=True)
 
 # assign text and sentiment to variables

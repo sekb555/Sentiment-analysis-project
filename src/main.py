@@ -16,14 +16,8 @@ import nltk
 from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
-BATCH_SIZE = 64
-MAX_EPOCHS = 10
-CHUNK_SIZE = 170000
-VOCAB_SIZE = 922770
-MAX_LEN = 32
-
-
 df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
 df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
+
 
 
