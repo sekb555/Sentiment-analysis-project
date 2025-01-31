@@ -4,8 +4,7 @@ from collections import Counter
 import re
 import pickle
 
-import preprocess_data as ppd
-
+from preprocess_data import preprocess_text, remove_stopwords
 import matplotlib.pyplot as plt
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -14,6 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.feature_extraction.text import CountVectorizer
+
 
 import nltk
 from nltk.corpus import stopwords
@@ -25,8 +25,8 @@ while True:
     text = input("Enter a tweet: ")
     if text == "exit" or text == '':
         break
-    text = ppd.preprocess_data.preprocess_text(text)
-    text = ppd.preprocess_data.remove_stopwords(text)
+    text = preprocess_text(text)
+    text = remove_stopwords(text)
     print(text)
     prediction = lr_model.predict([text])
     print(prediction)
