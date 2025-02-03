@@ -7,7 +7,7 @@ import os
 
 st.sidebar.title("Navigation")
 st.sidebar.write("Go to:")
-page = st.sidebar.radio("", ["Home", "Exploratory Data Analysis"])
+page = st.sidebar.radio("", ["Home", "Sentiment Analyzer", "Exploratory Data Analysis"])
 if page == "Exploratory Data Analysis":
     st.title("Exploratory Data Analysis")
     st.write("This page shows the exploratory data analysis of the training dataset.")
@@ -34,7 +34,8 @@ if page == "Exploratory Data Analysis":
     st.write("### Sentiment Distribution Over Time:")
     get_image_path("docs/sentiment_distribution_over_time.jpg",
                    "How sentiment trends change over time")
-elif page == "Home":
+    
+elif page == "Sentiment Analyzer":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     model_path = os.path.join(
         base_dir, "../data/logistic_regression_model.sav")
@@ -101,3 +102,8 @@ elif page == "Home":
         if st.button("Reset"):
             st.session_state.sentiment = {
                 'Positive': 0, 'Negative': 0, 'Neutral': 0}
+            
+elif page == "Home":
+    st.title("Home")
+    st.write("Welcome to my Sentiment Analysis App!")
+    st.write("This app uses a logistic regression model to predict the sentiment of a given text.")
