@@ -2,13 +2,18 @@ import streamlit as st
 import pandas as pd
 from preprocess_data import PreprocessData
 import joblib
-import os
 import plotly.graph_objects as go
+import os
 
+
+base_dir = os.path.dirname(os.path.abspath(__file__))  # Get current script directory
+model_path = os.path.join(base_dir, "../data/logistic_regression_model.sav")  # Construct absolute path
+
+lr_model = joblib.load(model_path)  # Load model
 
 ppd = PreprocessData()
 
-lr_model = joblib.load(open('../data/logistic_regression_model.sav', 'rb'))
+lr_model = joblib.load(open(model_path, 'rb'))
 
 st.title("Sentiment Analysis App")
 st.write("This app uses a logistic regression model to predict the sentiment of a given text.")
