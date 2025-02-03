@@ -14,8 +14,6 @@ def get_image_path(relative_path, text):
         st.error(f"Image not found: {image_path}")
 
 
-st.write(f"Current Working Directory: {os.getcwd()}")
-
 st.write("### Common Phrases:")
 get_image_path("docs/Common_Phrases.jpg",
                "Frequently used phrases in the dataset")
