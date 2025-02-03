@@ -10,6 +10,7 @@ stop_words = stopwords.words('english')
 
 class PreprocessData:
 
+# preprocess the text data
     def preprocess_text(text):
 
         if isinstance(text, str):
@@ -31,12 +32,14 @@ class PreprocessData:
             text = text.apply(html.unescape)  # remove html
             return text
 
+# remove stopwords from the text 
     def remove_stopwords(text):
         # remove stopwords
         text = ' '.join([word for word in text.split()
                         if word.lower() not in stop_words])
         return text
 
+# process the date column for more manageable data
     def process_date(date):
         date = date.astype(str).str.split()
         date = pd.DataFrame(date.tolist(), columns=[
@@ -44,6 +47,7 @@ class PreprocessData:
         date = date.drop(columns=['Timezone', 'Time'])
         return date
 
+# preprocess the training large set of training data
     def preprocess_trainingdata():
         # read the training data and assign the columns names
         df = pd.read_csv(

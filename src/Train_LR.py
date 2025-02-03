@@ -12,7 +12,7 @@ import nltk
 from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
-
+# Training the logistic regression model
 def logistic_regression(X, Y):
     X_train, X_test, Y_train, Y_test = train_test_split(
         X, Y, test_size=0.1, random_state=42)
@@ -28,12 +28,15 @@ def logistic_regression(X, Y):
     return confusion_matrix(Y_test, pipeline.predict(X_test)), training_accuracy, test_accuracy, pipeline
 
 
+# Load the processed data and encode the data 
 df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
 df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 
+# Assign the text and the sentiment to varibles
 tweets = df['Processed_Tweets'].values
 polarity = df['Polarity'].values
 
+# Creating a confusion matrix for model evaluation
 con_mat, training_accuracy, test_accuracy, model = logistic_regression(
     tweets, polarity)
 false_neg = con_mat[1][0]
