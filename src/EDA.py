@@ -10,11 +10,15 @@ from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
 # separates the words in the text data
+
+
 def word_seperator(text):
     words = text.astype(str).str.split().explode()
     return words
 
 # plot the most common phrases in the text data
+
+
 def common_phrases(texts):
     phrases = []
     for text in texts:
@@ -33,6 +37,8 @@ def common_phrases(texts):
     plt.show()
 
 # plot the most common words in the text data
+
+
 def word_freq(words):
     word_freq = Counter(words)
     common_words = word_freq.most_common(20)
@@ -45,6 +51,8 @@ def word_freq(words):
     plt.show()
 
 # plot the sentiment distribution
+
+
 def sentiment_distribution(sentiments):
     plt.figure(figsize=(6, 4))
     sentiments.value_counts().plot(kind='bar')
@@ -54,6 +62,8 @@ def sentiment_distribution(sentiments):
     plt.show()
 
 # plot the sentiment distribution over time
+
+
 def sentiment_over_time(S_D):
     plt.figure(figsize=(10, 5))
     S_D.plot(kind='line', stacked=True)
@@ -61,7 +71,8 @@ def sentiment_over_time(S_D):
     plt.xlabel('Date')
     plt.ylabel('Frequency')
     plt.show()
-    
+
+
 # load the processed data
 df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
 df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
@@ -72,6 +83,5 @@ df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 
 # sentiment_distribution(df['Polarity'])
 
-sentiment_over_time(df.groupby("DateOnly")['Polarity'].value_counts().unstack().fillna(0))
-
-
+sentiment_over_time(df.groupby("DateOnly")[
+                    'Polarity'].value_counts().unstack().fillna(0))
