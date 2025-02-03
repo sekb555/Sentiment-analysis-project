@@ -20,7 +20,7 @@ cd sentiment-analysis-app
 pip install -r requirements.txt
 
 # 3. Run the App
-streamlit run src/st_app.py
+streamlit run src/mainpage.py
 ```
 ## **Usage Instructions**
 Enter some text into the input box  
