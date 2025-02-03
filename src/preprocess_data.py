@@ -5,13 +5,17 @@ import re
 
 import nltk
 from nltk.corpus import stopwords
-stop_words = stopwords.words('english')
+
 
 
 class PreprocessData:
 
+    def __init__(self):
+        nltk.download('stopwords')
+        self.stop_words = stopwords.words('english')
+        
 # preprocess the text data
-    def preprocess_text(text):
+    def preprocess_text(self, text):
 
         if isinstance(text, str):
             text = re.sub(r'@\w+', '', text)  # remove user tags
@@ -33,14 +37,14 @@ class PreprocessData:
             return text
 
 # remove stopwords from the text 
-    def remove_stopwords(text):
+    def remove_stopwords(self, text):
         # remove stopwords
         text = ' '.join([word for word in text.split()
-                        if word.lower() not in stop_words])
+                        if word.lower() not in self.stop_words])
         return text
 
 # process the date column for more manageable data
-    def process_date(date):
+    def process_date(self, date):
         date = date.astype(str).str.split()
         date = pd.DataFrame(date.tolist(), columns=[
                             'Day', 'Month', 'Date', 'Time', 'Timezone', 'Year'])
@@ -48,7 +52,7 @@ class PreprocessData:
         return date
 
 # preprocess the training large set of training data
-    def preprocess_trainingdata():
+    def preprocess_trainingdata(self):
         # read the training data and assign the columns names
         df = pd.read_csv(
             "data/training.1600000.processed.noemoticon.csv", header=None, encoding="ISO-8859-1")
@@ -66,8 +70,8 @@ class PreprocessData:
         df["Polarity"] = sentiments
 
         # preprocess the input data
-        df['Processed_Tweets'] = PreprocessData.preprocess_text(
-            twts).apply(PreprocessData.remove_stopwords)
+        df['Processed_Tweets'] = self.preprocess_text(
+            twts).apply(self.remove_stopwords)
         # remove the original tweet column
         df.drop(columns=["Tweet"], inplace=True)
 
