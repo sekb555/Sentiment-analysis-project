@@ -66,16 +66,23 @@ def sentiment_over_time(S_D):
     plt.ylabel('Frequency')
     plt.show()
 
-
 # load the processed data
-df = pd.read_csv("data/processed_data.csv", encoding="ISO-8859-1")
+df = pd.read_csv("/Users/sekb/Desktop/processed_data.csv", encoding="ISO-8859-1")
 df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 
-# word_freq(word_seperator(df['Processed_Tweets']))
-
-# common_phrases(df['Processed_Tweets'])
-
-# sentiment_distribution(df['Polarity'])
-
-# sentiment_over_time(df.groupby("DateOnly")[
-#                     'Polarity'].value_counts().unstack().fillna(0))
+while(1):
+    EDA = input("Enter the EDA function you want to run: ")
+    EDA = EDA.lower()
+    if EDA == "word frequency":
+        word_freq(extract_words(df['Processed_Tweets']))
+    elif EDA == "common phrases":
+        common_phrases(df['Processed_Tweets'])
+    elif EDA == "sentiment distribution":
+        sentiment_distribution(df['Polarity'])
+    elif EDA == "sentiment distribution over time":
+        sentiment_over_time(df.groupby("DateOnly")[
+                            'Polarity'].value_counts().unstack().fillna(0))
+    elif EDA == "exit" or EDA == "":
+        break
+    else:
+        print("sorry that function does not exist try again")
