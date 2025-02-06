@@ -8,14 +8,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score, confusion_matrix
 
-import nltk
-from nltk.corpus import stopwords
 
 class TrainModel:
-    
+
     def __init__(self, file):
         self.file = file
-
 
     def load_data(self):
         df = pd.read_csv(self.file, encoding="utf-8")
@@ -32,14 +29,15 @@ class TrainModel:
 
         pipeline.fit(self.X_train, self.Y_train)
         y_pred = pipeline.predict(self.X_test)
-        
-        training_accuracy = accuracy_score(self.Y_train, pipeline.predict(self.X_train))
-        test_accuracy = accuracy_score(self.Y_test, pipeline.predict(self.X_test))
 
+        training_accuracy = accuracy_score(
+            self.Y_train, pipeline.predict(self.X_train))
+        test_accuracy = accuracy_score(
+            self.Y_test, pipeline.predict(self.X_test))
 
         print("Training accuracy:", round(training_accuracy * 100, 2), "%")
         print("Test accuracy:", round(test_accuracy * 100, 2), "%")
-    
+
         return pipeline, self.X_train, self.X_test, self.Y_train, self.Y_test, y_pred
 
     def evaluate_model(self, con_mat):
@@ -51,29 +49,33 @@ class TrainModel:
         precision = self.true_pos / (self.true_pos + self.false_pos)
         recall = self.true_pos / (self.true_pos + self.false_neg)
         F1 = 2 * (precision * recall) / (precision + recall)
-        
+
         print("Precision:", round(precision * 100, 2), "%")
         print("Recall:", round(recall * 100, 2), "%")
         print("F1 Score:", round(F1 * 100, 2), "%")
-        
+
         return precision, recall, F1
 
+
 TM = TrainModel("/Users/sekb/Desktop/processed_data.csv")
+
+
 def main():
     df = TM.load_data()
     tweets = df['Processed_Tweets'].values
     polarity = df['Polarity'].values
 
-    pipeline, X_train, X_test, Y_train, Y_test, y_pred = TM.train_LR(tweets, polarity)
+    pipeline, X_train, X_test, Y_train, Y_test, y_pred = TM.train_LR(
+        tweets, polarity)
     con_mat = confusion_matrix(Y_test, y_pred)
     precision, recall, F1 = TM.evaluate_model(con_mat)
-
 
     # Ensure the directory exists
     model_dir = 'data'
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
-    joblib.dump(pipeline, os.path.join(model_dir, 'logistic_regression_model.sav'))
+    joblib.dump(pipeline, os.path.join(
+        model_dir, 'logistic_regression_model.sav'))
 
 
 main()
