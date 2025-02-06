@@ -9,6 +9,11 @@ from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
 
+def load_data():
+    df = pd.read_csv("/Users/sekb/Desktop/processed_data.csv",
+                 encoding="ISO-8859-1")
+    return df
+
 # separates the words in the text data
 def extract_words(text):
     words = text.astype(str).str.split().explode()
@@ -66,11 +71,11 @@ def sentiment_over_time(S_D):
     plt.ylabel('Frequency')
     plt.show()
 
-# load the processed data
-df = pd.read_csv("/Users/sekb/Desktop/processed_data.csv", encoding="ISO-8859-1")
+
+df = load_data()
 df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
 
-while(1):
+while (1):
     EDA = input("Enter the EDA function you want to run: ")
     EDA = EDA.lower()
     if EDA == "word frequency":

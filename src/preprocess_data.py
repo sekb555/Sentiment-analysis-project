@@ -7,13 +7,12 @@ import nltk
 from nltk.corpus import stopwords
 
 
-
 class PreprocessData:
 
     def __init__(self):
         nltk.download('stopwords')
         self.stop_words = stopwords.words('english')
-        
+
 # preprocess the text data
     def preprocess_text(self, text):
 
@@ -36,7 +35,7 @@ class PreprocessData:
             text = text.apply(html.unescape)  # remove html
             return text
 
-# remove stopwords from the text 
+# remove stopwords from the text
     def remove_stopwords(self, text):
         # remove stopwords
         text = ' '.join([word for word in text.split()
