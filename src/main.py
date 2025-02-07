@@ -57,28 +57,27 @@ elif page == "Sentiment Analyzer":
 
     prob_negi = 0
     prob_posi = 0
-    if st.button("Analyze"):
-        if text.strip() == "":
-            st.write("Nothing entered. Please enter some text.")
-        else:
-            text = ppd.preprocess_text(text)
-            text = ppd.remove_stopwords(text)
-            prediction = lr_model.predict_proba([text])[0]
-            prob_negi = prediction[0]
-            prob_posi = prediction[1]
+    if text.strip() == "":
+        st.write("Nothing entered. Please enter some text.")
+    else:
+        text = ppd.preprocess_text(text)
+        text = ppd.remove_stopwords(text)
+        prediction = lr_model.predict_proba([text])[0]
+        prob_negi = prediction[0]
+        prob_posi = prediction[1]
 
-            if abs(prob_posi-prob_negi) < 0.2:
-                sentiment = "Neutral statement"
-                st.session_state.sentiment['Neutral'] += 1
-                st.write(sentiment)
-            elif prob_negi > 0.5:
-                sentiment = "Negative sentiment"
-                st.session_state.sentiment['Negative'] += 1
-                st.write(sentiment)
-            elif prob_posi > 0.5:
-                sentiment = "Positive sentiment"
-                st.session_state.sentiment['Positive'] += 1
-                st.write(sentiment)
+        if abs(prob_posi-prob_negi) < 0.2:
+            sentiment = "Neutral statement"
+            st.session_state.sentiment['Neutral'] += 1
+            st.write(sentiment)
+        elif prob_negi > 0.5:
+            sentiment = "Negative sentiment"
+            st.session_state.sentiment['Negative'] += 1
+            st.write(sentiment)
+        elif prob_posi > 0.5:
+            sentiment = "Positive sentiment"
+            st.session_state.sentiment['Positive'] += 1
+            st.write(sentiment)
 
     col1, col2 = st.columns([20, 3], vertical_alignment="bottom")
 
