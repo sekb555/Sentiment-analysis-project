@@ -11,20 +11,26 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 
 class TrainModel:
 
-    def __init__(self, file):
+    def __init__(self, file, test_size=0.1, random_state=42, max_iter=1000):
         self.file = file
+        self.test_size = test_size
+        self.random_state = random_state
+        self.max_iter = max_iter
 
     def load_data(self):
-        df = pd.read_csv(self.file, encoding="utf-8")
+        try:
+            df = pd.read_csv(self.file, encoding="utf-8")
+        except:
+            print("Error loading data from", self.file)
         df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
         return df
 
     def train_LR(self, X, Y):
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(
-            X, Y, test_size=0.1, random_state=42)
+            X, Y, self.test_size, self.random_state)
 
         pipeline = make_pipeline(
-            TfidfVectorizer(), LogisticRegression(max_iter=1000)
+            TfidfVectorizer(), LogisticRegression(self.max_iter)
         )
 
         pipeline.fit(self.X_train, self.Y_train)
