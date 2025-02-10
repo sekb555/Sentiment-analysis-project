@@ -37,17 +37,29 @@ if page == "Exploratory Data Analysis":
                    "How sentiment trends change over time")
 
 elif page == "Sentiment Analyzer":
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    model_path = os.path.join(
-        base_dir, "../data/logistic_regression_model.sav")
 
-    lr_model = joblib.load(model_path)  # Load model
 
     ppd = PreprocessData()
 
     st.title("Sentiment Analysis App")
-    st.write(
-        "This app uses a logistic regression model to predict the sentiment of a given text.")
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    option = st.selectbox(
+    "How would you like to be contacted?",
+    ("Logistic Regression", "Naive Bayes")
+    )
+    
+    if option == "Logistic Regression":
+        model_path = os.path.join(
+        base_dir, "../data/logistic_regression_model.sav")
+    elif option == "Naive Bayes":
+        model_path = os.path.join(base_dir, "../data/NB_model.sav")
+
+    model = joblib.load(model_path)  # Load model
+    if option == "Logistic Regression":
+        st.write("Logistic Regression Model")
+    elif option == "Naive Bayes":
+        st.write("Naive Bayes Model")
 
     if 'sentiment' not in st.session_state:
         st.session_state.sentiment = {
@@ -62,7 +74,7 @@ elif page == "Sentiment Analyzer":
     else:
         text = ppd.preprocess_text(text)
         text = ppd.remove_stopwords(text)
-        prediction = lr_model.predict_proba([text])[0]
+        prediction = model.predict_proba([text])[0]
         prob_negi = prediction[0]
         prob_posi = prediction[1]
 
@@ -78,6 +90,7 @@ elif page == "Sentiment Analyzer":
             sentiment = "Positive sentiment"
             st.session_state.sentiment['Positive'] += 1
             st.write(sentiment)
+            
 
     col1, col2 = st.columns([20, 3], vertical_alignment="bottom")
 
