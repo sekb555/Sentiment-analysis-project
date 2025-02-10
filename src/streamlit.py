@@ -89,30 +89,13 @@ elif page == "Sentiment Analyzer":
             sentiment = "Positive sentiment"
             st.session_state.sentiment['Positive'] += 1
             st.write(sentiment)
+            
+    st.write("Positive statements:", st.session_state.sentiment['Positive'], "Neutral statements:",
+             st.session_state.sentiment['Neutral'], "Negative statements:", st.session_state.sentiment['Negative'])
 
-    col1, col2 = st.columns([20, 3], vertical_alignment="bottom")
-
-    with col1:
-        st.write("Positive statements:", st.session_state.sentiment['Positive'], "Neutral statements:",
-                 st.session_state.sentiment['Neutral'], "Negative statements:", st.session_state.sentiment['Negative'])
-        st.write("## Sentiment Analysis Results")
-        if st.session_state.sentiment != {'Positive': 0, 'Negative': 0, 'Neutral': 0}:
-
-            labels = ["Positive", "Negative", "Neutral"]
-            values = [st.session_state.sentiment[label] for label in labels]
-            colors = ["#2ECC71", "#E74C3C", "#3498DB"]
-
-            fig = go.Figure(
-                data=[go.Pie(labels=labels, values=values, marker=dict(colors=colors))])
-
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.write("### No data to display")
-
-    with col2:
-        if st.button("Reset"):
-            st.session_state.sentiment = {
-                'Positive': 0, 'Negative': 0, 'Neutral': 0}
+    if st.button("Reset"):
+        st.session_state.sentiment = {
+            'Positive': 0, 'Negative': 0, 'Neutral': 0}
 
 elif page == "Home":
     st.title("Home")
