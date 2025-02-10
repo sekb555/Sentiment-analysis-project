@@ -56,7 +56,8 @@ def main():
 
     tweets = df['Processed_Tweets'].values
     polarity = df['Polarity'].values
-    pipeline, X_train, X_test, Y_train, Y_test, y_pred = NB.train_NB(tweets, polarity)
+    pipeline, X_train, X_test, Y_train, Y_test, y_pred = NB.train_NB(
+        tweets, polarity)
     NB.evaluate_model(y_pred)
 
     joblib.dump(pipeline, "data/NB_model.sav")

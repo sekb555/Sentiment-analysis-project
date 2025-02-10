@@ -38,20 +38,19 @@ if page == "Exploratory Data Analysis":
 
 elif page == "Sentiment Analyzer":
 
-
     ppd = PreprocessData()
 
     st.title("Sentiment Analysis App")
-    
+
     base_dir = os.path.dirname(os.path.abspath(__file__))
     option = st.selectbox(
-    "How would you like to be contacted?",
-    ("Logistic Regression", "Naive Bayes")
+        "How would you like to be contacted?",
+        ("Logistic Regression", "Naive Bayes")
     )
-    
+
     if option == "Logistic Regression":
         model_path = os.path.join(
-        base_dir, "../data/logistic_regression_model.sav")
+            base_dir, "../data/logistic_regression_model.sav")
     elif option == "Naive Bayes":
         model_path = os.path.join(base_dir, "../data/NB_model.sav")
 
@@ -90,7 +89,6 @@ elif page == "Sentiment Analyzer":
             sentiment = "Positive sentiment"
             st.session_state.sentiment['Positive'] += 1
             st.write(sentiment)
-            
 
     col1, col2 = st.columns([20, 3], vertical_alignment="bottom")
 

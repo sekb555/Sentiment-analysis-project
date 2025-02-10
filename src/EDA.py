@@ -11,10 +11,12 @@ stop_words = stopwords.words('english')
 
 def load_data():
     df = pd.read_csv("/Users/sekb/Desktop/processed_data.csv",
-                 encoding="ISO-8859-1")
+                     encoding="ISO-8859-1")
     return df
 
 # separates the words in the text data
+
+
 def extract_words(text):
     words = text.astype(str).str.split().explode()
     return words
