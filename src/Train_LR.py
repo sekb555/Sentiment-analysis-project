@@ -6,10 +6,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report
 
 
-class TrainModel:
+class TrainLR:
 
     def __init__(self, file, test_size=0.1, random_state=42, max_iter=1000):
         self.file = file
@@ -27,10 +27,10 @@ class TrainModel:
 
     def train_LR(self, X, Y):
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(
-            X, Y, self.test_size, self.random_state)
-
+            X, Y, test_size=self.test_size, random_state=self.random_state
+        )
         pipeline = make_pipeline(
-            TfidfVectorizer(), LogisticRegression(self.max_iter)
+            TfidfVectorizer(), LogisticRegression(max_iter=self.max_iter)
         )
 
         pipeline.fit(self.X_train, self.Y_train)
@@ -41,29 +41,16 @@ class TrainModel:
         test_accuracy = accuracy_score(
             self.Y_test, pipeline.predict(self.X_test))
 
-        print("Training accuracy:", round(training_accuracy * 100, 2), "%")
-        print("Test accuracy:", round(test_accuracy * 100, 2), "%")
+        print("LR Training accuracy:", round(training_accuracy * 100, 2), "%")
+        print("LR Test accuracy:", round(test_accuracy * 100, 2), "%")
 
         return pipeline, self.X_train, self.X_test, self.Y_train, self.Y_test, y_pred
 
-    def evaluate_model(self, con_mat):
-        self.false_neg = con_mat[1][0]
-        self.false_pos = con_mat[0][1]
-        self.true_neg = con_mat[0][0]
-        self.true_pos = con_mat[1][1]
-
-        precision = self.true_pos / (self.true_pos + self.false_pos)
-        recall = self.true_pos / (self.true_pos + self.false_neg)
-        F1 = 2 * (precision * recall) / (precision + recall)
-
-        print("Precision:", round(precision * 100, 2), "%")
-        print("Recall:", round(recall * 100, 2), "%")
-        print("F1 Score:", round(F1 * 100, 2), "%")
-
-        return precision, recall, F1
+    def evaluate_model(self, y_pred):
+        print(classification_report(self.Y_test, y_pred))
 
 
-TM = TrainModel("/Users/sekb/Desktop/processed_data.csv")
+TM = TrainLR("/Users/sekb/Desktop/processed_data.csv")
 
 
 def main():
@@ -73,15 +60,9 @@ def main():
 
     pipeline, X_train, X_test, Y_train, Y_test, y_pred = TM.train_LR(
         tweets, polarity)
-    con_mat = confusion_matrix(Y_test, y_pred)
-    precision, recall, F1 = TM.evaluate_model(con_mat)
+    TM.evaluate_model(y_pred)
 
-    # Ensure the directory exists
-    model_dir = 'data'
-    if not os.path.exists(model_dir):
-        os.makedirs(model_dir)
-    joblib.dump(pipeline, os.path.join(
-        model_dir, 'logistic_regression_model.sav'))
+    joblib.dump(pipeline, 'data/logistic_regression_model.sav')
 
 
 main()
