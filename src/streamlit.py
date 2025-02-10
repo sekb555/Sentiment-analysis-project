@@ -77,7 +77,7 @@ elif page == "Sentiment Analyzer":
         prob_negi = prediction[0]
         prob_posi = prediction[1]
 
-        if abs(prob_posi-prob_negi) < 0.2:
+        if abs(prob_posi-prob_negi) < 0.3:
             sentiment = "Neutral statement"
             st.session_state.sentiment['Neutral'] += 1
             st.write(sentiment)
