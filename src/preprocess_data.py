@@ -39,11 +39,11 @@ class PreprocessData:
             return text
 
 # remove stopwords from the text
-    def remove_stopwords(self, text):
-        # remove stopwords
-        text = ' '.join([word for word in text.split()
-                        if word.lower() not in self.stop_words])
-        return text
+    # def remove_stopwords(self, text):
+    #     # remove stopwords
+    #     text = ' '.join([word for word in text.split()
+    #                     if word.lower() not in self.stop_words])
+    #     return text
 
 # process the date column for more manageable data
     def process_date(self, date):
@@ -54,7 +54,7 @@ class PreprocessData:
         return date
 
 # preprocess the training large set of training data
-    def preprocess_trainingdata(self, file):
+    def preprocess_trainingdata(self, file = "data/training.1600000.processed.noemoticon.csv"):
         # read the training data and assign the columns names
         df = pd.read_csv(
             file, header=None, encoding="ISO-8859-1")
@@ -73,7 +73,8 @@ class PreprocessData:
 
         # preprocess the input data
         df['Processed_Tweets'] = self.preprocess_text(
-            twts).apply(self.remove_stopwords)
+            twts)
+        #.apply(self.remove_stopwords)
         # remove the original tweet column
         df.drop(columns=["Tweet"], inplace=True)
 
@@ -90,3 +91,4 @@ class PreprocessData:
             'Polarity'].value_counts().unstack().fillna(0)
 
         df.to_csv("data/processed_data.csv", index=False)
+        print("Data Preprocessing Complete")

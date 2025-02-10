@@ -72,7 +72,7 @@ elif page == "Sentiment Analyzer":
         st.write("Nothing entered. Please enter some text.")
     else:
         text = ppd.preprocess_text(text)
-        text = ppd.remove_stopwords(text)
+        # text = ppd.remove_stopwords(text)
         prediction = model.predict_proba([text])[0]
         prob_negi = prediction[0]
         prob_posi = prediction[1]

@@ -4,9 +4,10 @@ from collections import Counter
 import re
 import joblib
 
-from preprocess_data import PreprocessData as ppd
+from preprocess_data import PreprocessData
 import matplotlib.pyplot as plt
 
+ppd = PreprocessData()
 
 import nltk
 stop_words = nltk.download('stopwords')
@@ -20,7 +21,7 @@ while True:
     if text == "exit":
         break
     text = ppd.preprocess_text(text)
-    text = ppd.remove_stopwords(text)
+    #text = ppd.remove_stopwords(text)
     print(text)
     prediction = lr_model.predict_proba([text])[0]
     print(prediction)
@@ -31,7 +32,7 @@ while True:
     prob_negi = prediction[0]
 
     # print the sentiment beased on the outcome of the model
-    if abs(prob_posi-prob_negi) < 0.2:
+    if abs(prob_posi-prob_negi) < 0.3:
         print("Neutral statment")
     elif prob_negi > 0.5:
         print("Negative sentiment")
