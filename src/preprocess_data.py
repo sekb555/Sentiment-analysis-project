@@ -9,11 +9,14 @@ from nltk.corpus import stopwords
 
 class PreprocessData:
 
+    nltk.download('stopwords')
+
     def __init__(self):
-        nltk.download('stopwords')
         self.stop_words = stopwords.words('english')
 
+
 # preprocess the text data
+
     def preprocess_text(self, text):
 
         if isinstance(text, str):
@@ -51,10 +54,10 @@ class PreprocessData:
         return date
 
 # preprocess the training large set of training data
-    def preprocess_trainingdata(self):
+    def preprocess_trainingdata(self, file):
         # read the training data and assign the columns names
         df = pd.read_csv(
-            "data/training.1600000.processed.noemoticon.csv", header=None, encoding="ISO-8859-1")
+            file, header=None, encoding="ISO-8859-1")
         df.columns = ["Polarity", "ID", "Date", "Flag", "User", "Tweet"]
 
         df = df.dropna(subset=["Tweet"])  # remove rows with missing tweets

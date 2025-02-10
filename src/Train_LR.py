@@ -18,10 +18,7 @@ class TrainLR:
         self.max_iter = max_iter
 
     def load_data(self):
-        try:
-            df = pd.read_csv(self.file, encoding="utf-8")
-        except:
-            print("Error loading data from", self.file)
+        df = pd.read_csv(self.file, encoding="utf-8")
         df['Processed_Tweets'] = df['Processed_Tweets'].astype(str)
         return df
 
@@ -49,20 +46,13 @@ class TrainLR:
     def evaluate_model(self, y_pred):
         print(classification_report(self.Y_test, y_pred))
 
+    def main(self):
+        df = self.load_data()
+        tweets = df['Processed_Tweets'].values
+        polarity = df['Polarity'].values
 
-TM = TrainLR("/Users/sekb/Desktop/processed_data.csv")
+        pipeline, X_train, X_test, Y_train, Y_test, y_pred = self.train_LR(
+            tweets, polarity)
+        self.evaluate_model(y_pred)
 
-
-def main():
-    df = TM.load_data()
-    tweets = df['Processed_Tweets'].values
-    polarity = df['Polarity'].values
-
-    pipeline, X_train, X_test, Y_train, Y_test, y_pred = TM.train_LR(
-        tweets, polarity)
-    TM.evaluate_model(y_pred)
-
-    joblib.dump(pipeline, 'data/logistic_regression_model.sav')
-
-
-main()
+        joblib.dump(pipeline, 'data/logistic_regression_model.sav')
