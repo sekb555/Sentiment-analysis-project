@@ -8,7 +8,7 @@ import os
 st.sidebar.title("Navigation")
 st.sidebar.write("Go to:")
 page = st.sidebar.radio(
-    "", ["Home", "Sentiment Analyzer", "Exploratory Data Analysis"])
+    "", ["Sentiment Analyzer", "Exploratory Data Analysis"])
 if page == "Exploratory Data Analysis":
     st.title("Exploratory Data Analysis")
     st.write("This page shows the exploratory data analysis of the training dataset.")
@@ -41,10 +41,12 @@ elif page == "Sentiment Analyzer":
     ppd = PreprocessData()
 
     st.title("Sentiment Analysis App")
+    st.subheader(
+        "This app uses a logistic regression model to predict the sentiment of a given text.")
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     option = st.selectbox(
-        "How would you like to be contacted?",
+        "what model would you like to use?",
         ("Logistic Regression", "Naive Bayes")
     )
 
@@ -55,10 +57,9 @@ elif page == "Sentiment Analyzer":
         model_path = os.path.join(base_dir, "../data/NB_model.sav")
 
     model = joblib.load(model_path)  # Load model
-    if option == "Logistic Regression":
-        st.write("Logistic Regression Model")
-    elif option == "Naive Bayes":
-        st.write("Naive Bayes Model")
+    st.markdown(f"""
+        <p style="font-size:18px;" > {option} model loaded successfully.</p>
+    """, unsafe_allow_html=True)
 
     if 'sentiment' not in st.session_state:
         st.session_state.sentiment = {
@@ -69,7 +70,9 @@ elif page == "Sentiment Analyzer":
     prob_negi = 0
     prob_posi = 0
     if text.strip() == "":
-        st.write("Nothing entered. Please enter some text.")
+        st.markdown(f"""
+            <p style="font-size:18px;" > Nothing entered. Please enter some text.</p>
+        """, unsafe_allow_html=True)
     else:
         text = ppd.preprocess_text(text)
         # text = ppd.remove_stopwords(text)
@@ -78,27 +81,19 @@ elif page == "Sentiment Analyzer":
         prob_posi = prediction[1]
 
         if abs(prob_posi-prob_negi) < 0.3:
-            sentiment = "Neutral statement"
+            sentiment = "Neutral"
             st.session_state.sentiment['Neutral'] += 1
-            st.write(sentiment)
         elif prob_negi > 0.5:
-            sentiment = "Negative sentiment"
+            sentiment = "Negative"
             st.session_state.sentiment['Negative'] += 1
-            st.write(sentiment)
         elif prob_posi > 0.5:
-            sentiment = "Positive sentiment"
+            sentiment = "Positive"
             st.session_state.sentiment['Positive'] += 1
-            st.write(sentiment)
             
-    st.write("Positive statements:", st.session_state.sentiment['Positive'], "Neutral statements:",
-             st.session_state.sentiment['Neutral'], "Negative statements:", st.session_state.sentiment['Negative'])
+        
+        st.markdown(f"""
+            <p style="font-size:18px;" >The sentiment of the text is {sentiment}.</p>
+            <p style="font-size:18px;" >The probability of the text being positive is {round(prob_posi*100, 2)}% 
+            and the probability of the text being negative is {round(prob_negi*100, 2)}%.</p>
+        """, unsafe_allow_html=True)
 
-    if st.button("Reset"):
-        st.session_state.sentiment = {
-            'Positive': 0, 'Negative': 0, 'Neutral': 0}
-
-elif page == "Home":
-    st.title("Home")
-    st.write("Welcome to my Sentiment Analysis App!")
-    st.write(
-        "This app uses a logistic regression model to predict the sentiment of a given text.")
